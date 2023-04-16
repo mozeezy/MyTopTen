@@ -14,10 +14,11 @@ movie_db_url = "https://api.themoviedb.org/3/search/movie"
 app = Flask(__name__)
 app.app_context().push()
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Bootstrap(app)
+
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,15 +27,16 @@ class Movie(db.Model):
     description = db.Column(db.String(250), nullable=True)
     rating = db.Column(db.Float, nullable=True)
     ranking = db.Column(db.Integer, nullable=True)
-    review = db.Column(db.Text, nullable=True)
-    img_url = db.Column(db.Text, nullable=True)
+    review = db.Column(db.String(250), nullable=True)
+    img_url = db.Column(db.String(250), nullable=True)
 
 
 db.create_all()
 
 
 class RateMovieForm(FlaskForm):
-    your_rating = StringField(label="Your Rating Out of 10 (e.g. 7.5)", validators=[DataRequired()])
+    your_rating = StringField(
+        label="Your Rating Out of 10 (e.g. 7.5)", validators=[DataRequired()])
     your_review = StringField(label="Your Review", validators=[DataRequired()])
     done_btn = SubmitField(label="Submit")
 
@@ -79,7 +81,8 @@ def delete():
 def add_movie():
     add_form = AddMovieForm()
     if add_form.validate_on_submit():
-        api_response = requests.get(movie_db_url, params={"api_key": os.environ.get("API_KEY"), "query": add_form.title.data}).json()["results"]
+        api_response = requests.get(movie_db_url, params={"api_key": os.environ.get(
+            "API_KEY"), "query": add_form.title.data}).json()["results"]
         return render_template("select.html", movies=api_response)
     return render_template("add.html", form=add_form)
 
@@ -89,7 +92,8 @@ def find_movie():
     movie_id_from_api = request.args.get("id")
     if movie_id_from_api:
         movie_api_url = f"https://api.themoviedb.org/3/movie/{movie_id_from_api}"
-        response = requests.get(movie_api_url, params={"api_key": os.environ.get("API_KEY")}).json()
+        response = requests.get(movie_api_url, params={
+                                "api_key": os.environ.get("API_KEY")}).json()
         new_movie = Movie(
             title=response["original_title"],
             year=response["release_date"].split("-")[0],
