@@ -10,6 +10,7 @@ A fullstack CRUD web application that allows users to create a list with their f
 
 ### Installation
 * Clone this repo.
+* Install the dependencies from the requirements.txt file.
 * Fetch the api key from: https://developers.themoviedb.org/3/getting-started/introduction
 * Assign the api key to the environmental variable: API_KEY
 
