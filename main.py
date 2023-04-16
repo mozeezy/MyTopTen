@@ -14,7 +14,7 @@ movie_db_url = "https://api.themoviedb.org/3/search/movie"
 app = Flask(__name__)
 app.app_context().push()
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Bootstrap(app)
@@ -26,8 +26,8 @@ class Movie(db.Model):
     description = db.Column(db.String(250), nullable=True)
     rating = db.Column(db.Float, nullable=True)
     ranking = db.Column(db.Integer, nullable=True)
-    review = db.Column(db.String(250), nullable=True)
-    img_url = db.Column(db.String(250), nullable=True)
+    review = db.Column(db.Text, nullable=True)
+    img_url = db.Column(db.Text, nullable=True)
 
 
 db.create_all()
