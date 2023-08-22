@@ -1,4 +1,4 @@
-# Project Title
+# MyTopTen - A Movie Ranking Application
 
 Introducing MyTopTen
 
